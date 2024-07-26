@@ -1,0 +1,130 @@
+.sort-page {
+  font-family: Arial, sans-serif;
+  text-align: center;
+  padding: 20px;
+  color: #fff; /* Ensure text color is visible */
+  min-height: 100vh; /* Ensure it fills the viewport height */
+}
+
+h1, h2 {
+  color: #fff; /* Ensure headers are visible */
+  text-shadow: 2px 2px 4px #000; /* Add text shadow for better visibility */
+}
+
+.array-container {
+  display: flex;
+  flex-wrap: wrap; /* Allow items to wrap to the next line */
+  justify-content: center;
+  align-items: center;
+  background-color: rgba(0, 0, 0, 0.6); /* Semi-transparent background */
+  padding: 10px;
+  border-radius: 5px;
+  margin-bottom: 20px;
+}
+
+.array-item {
+  display: inline-block;
+  padding: 10px;
+  margin: 5px; /* Adjust margin to prevent overflow */
+  background-color: #FFD700; /* Bright yellow background */
+  color: #000; /* Black text for contrast */
+  border-radius: 3px;
+  min-width: 30px;
+  text-align: center;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+}
+
+.iteration-buttons {
+  display: flex;
+  justify-content: center;
+  margin-top: 20px;
+}
+
+.iteration-buttons button {
+  margin: 0 10px;
+  padding: 10px 20px;
+  font-size: 16px;
+  background-color: #007BFF;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.iteration-buttons button:disabled {
+  background-color: #ccc;
+  cursor: not-allowed;
+}
+
+.iteration-buttons button:hover:not(:disabled) {
+  background-color: #0056b3;
+}
+
+.stats-container {
+  margin-top: 20px;
+  background-color: rgba(0, 0, 0, 0.6);
+  padding: 20px;
+  border-radius: 5px;
+  text-align: left;
+  display: inline-block;
+}
+
+.stats-container p,
+.stats-container h3 {
+  margin: 10px 0;
+}
+
+.stats-container ul {
+  list-style-type: disc;
+  padding-left: 20px;
+}
+
+.simulation-container {
+  margin-top: 20px;
+}
+
+.simulation-container button {
+  margin-top: 20px;
+  padding: 10px 20px;
+  font-size: 16px;
+  background-color: #28a745;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.simulation-container button:disabled {
+  background-color: #ccc;
+  cursor: not-allowed;
+}
+
+.simulation-container button:hover:not(:disabled) {
+  background-color: #218838;
+}
+
+.heap-chart {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.heap-level {
+  display: flex;
+  justify-content: center;
+  margin: 10px 0;
+}
+
+.heap-node {
+  display: inline-block;
+  padding: 10px;
+  margin: 5px;
+  background-color: #FFD700; /* Bright yellow background */
+  color: #000; /* Black text for contrast */
+  border-radius: 3px;
+  min-width: 30px;
+  text-align: center;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+}

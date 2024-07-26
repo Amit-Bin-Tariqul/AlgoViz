@@ -1,0 +1,18 @@
+/* Existing styles */
+
+.array-container {
+    display: flex;
+    justify-content: center;
+    margin: 20px 0;
+  }
+  
+  .array-item {
+    display: inline-block;
+    margin: 0 5px;
+    padding: 10px;
+    background-color: #f0f0f0;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    text-align: center;
+  }
+  
