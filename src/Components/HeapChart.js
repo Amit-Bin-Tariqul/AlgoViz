@@ -1,5 +1,4 @@
 import React from 'react';
-import './HeapChart.css';
 
 const HeapChart = ({ array }) => {
   const renderHeap = (arr) => {

@@ -1,13 +1,16 @@
 import React, { useEffect, useState, useRef } from 'react';
 import axios from 'axios';
+import './SortPage.css';
 import BarChart from './BarChart';
 import HeapChart from './HeapChart';
-import './SortPage.css';
 
 const SortPage = ({ endpoint, title }) => {
   const [initialArray, setInitialArray] = useState([]);
   const [iterations, setIterations] = useState([]);
   const [states, setStates] = useState([]);
+  const [levels, setLevels] = useState([]);
+  const [merged, setMerged] = useState([]);
+  const [sortedArray, setSortedArray] = useState([]);
   const [currentIndex, setCurrentIndex] = useState(0);
   const [stats, setStats] = useState({
     swaps: 0,
@@ -24,10 +27,13 @@ const SortPage = ({ endpoint, title }) => {
   useEffect(() => {
     axios.post(`http://localhost:3000/api/${endpoint}`)
       .then(response => {
-        const { initialArray, iterations, states, swaps, timeTaken, timeComplexity, pros, cons } = response.data;
+        const { initialArray, iterations, states, levels, merged, sortedArray, swaps, timeTaken, timeComplexity, pros, cons } = response.data;
         setInitialArray(initialArray || []);
         setIterations(iterations || []);
         setStates(states || []);
+        setLevels(levels || []);
+        setMerged(merged || []);
+        setSortedArray(sortedArray || []);
         setCurrentIndex(0);
         setStats({
           swaps: swaps || 0,
@@ -44,7 +50,7 @@ const SortPage = ({ endpoint, title }) => {
   }, [endpoint]);
 
   const handleNextIteration = () => {
-    if (currentIndex < states.length - 1) {
+    if (currentIndex < (endpoint === 'merge-sort' ? levels.length + merged.length - 1 : states.length - 1)) {
       setCurrentIndex(currentIndex + 1);
     }
   };
@@ -66,9 +72,9 @@ const SortPage = ({ endpoint, title }) => {
 
     intervalRef.current = setInterval(() => {
       setCurrentIndex((prevIndex) => {
-        if (!isPaused && prevIndex < states.length - 1) {
+        if (!isPaused && prevIndex < (endpoint === 'merge-sort' ? levels.length + merged.length - 1 : states.length - 1)) {
           return prevIndex + 1;
-        } else if (!isPaused && prevIndex >= states.length - 1) {
+        } else if (!isPaused && prevIndex >= (endpoint === 'merge-sort' ? levels.length + merged.length - 1 : states.length - 1)) {
           clearInterval(intervalRef.current);
           setIsSimulating(false);
           return prevIndex;
@@ -91,92 +97,60 @@ const SortPage = ({ endpoint, title }) => {
     }
   }, [isPaused]);
 
-  const renderSubarrays = (state) => {
-    if (endpoint === 'merge-sort') {
-      return (
-        <div className="subarrays">
-          {state.left && (
-            <div className="subarray">
-              <div className="array-container">
-                {state.left.map((num, index) => (
-                  <div key={index} className="array-item">{num}</div>
-                ))}
-              </div>
-              <div>↓</div>
+  const renderSubarrays = (levelData) => {
+    return (
+      <div className="subarrays">
+        {levelData.arrays.map((subarray, index) => (
+          <div key={index} className="subarray">
+            <div className="array-container">
+              {subarray.map((num, subIndex) => (
+                <div key={subIndex} className="array-item">{num}</div>
+              ))}
             </div>
-          )}
-          {state.right && (
-            <div className="subarray">
-              <div className="array-container">
-                {state.right.map((num, index) => (
-                  <div key={index} className="array-item">{num}</div>
-                ))}
-              </div>
-              <div>↓</div>
-            </div>
-          )}
-          {state.result && (
-            <div className="subarray">
-              <div className="array-container">
-                {state.result.map((num, index) => (
-                  <div key={index} className="array-item">{num}</div>
-                ))}
-              </div>
-            </div>
-          )}
-        </div>
-      );
-    } else if (endpoint === 'quick-sort') {
-      return (
-        <div className="subarrays">
-          {state.left && (
-            <div className="subarray">
-              <div className="array-container">
-                {state.left.map((num, index) => (
-                  <div key={index} className="array-item">{num}</div>
-                ))}
-              </div>
-              <div>↓</div>
-            </div>
-          )}
-          {state.pivot !== undefined && (
-            <div className="subarray">
-              <div className="array-container">{state.pivot}</div>
-              <div>↓</div>
-            </div>
-          )}
-          {state.right && (
-            <div className="subarray">
-              <div className="array-container">
-                {state.right.map((num, index) => (
-                  <div key={index} className="array-item">{num}</div>
-                ))}
-              </div>
-            </div>
-          )}
-          {state.array && (
-            <div className="subarray">
-              <div className="array-container">
-                {state.array.map((num, index) => (
-                  <div key={index} className="array-item">{num}</div>
-                ))}
-              </div>
-            </div>
-          )}
-        </div>
-      );
-    }
-    return null;
+          </div>
+        ))}
+      </div>
+    );
   };
 
   const renderCurrentArray = () => {
-    return (
-      <div className="array-container">
-        {iterations.length > 0 && iterations[currentIndex] ? iterations[currentIndex].map((num, index) => (
-          <div key={index} className="array-item">{num}</div>
-        )) : null}
-      </div>
-    );
+    if (endpoint === 'merge-sort') {
+      if (currentIndex < levels.length) {
+        return levels.map((levelData, index) => (
+          <div key={index} className="level-container">
+            {renderSubarrays(levelData)}
+          </div>
+        )).slice(0, currentIndex + 1);
+      } else {
+        if (currentIndex === levels.length + merged.length - 1) {
+          return (
+            <div className="level-container">
+              <div className="subarray">
+                <div className="array-container">
+                  {sortedArray.map((num, index) => (
+                    <div key={index} className="array-item">{num}</div>
+                  ))}
+                </div>
+              </div>
+            </div>
+          );
+        } else {
+          return merged.map((levelData, index) => (
+            <div key={index} className="level-container">
+              {renderSubarrays(levelData)}
+            </div>
+          )).slice(0, currentIndex - levels.length + 1);
+        }
+      }
+    } else {
+      return (
+        <div className="array-container">
+          {states.length > 0 && states[currentIndex] ? states[currentIndex].map((num, index) => (
+            <div key={index} className="array-item">{num}</div>
+          )) : null}
+        </div>
+      );
+    }
   };
 
   return (
@@ -190,14 +164,16 @@ const SortPage = ({ endpoint, title }) => {
           ))}
         </div>
       </div>
-      <div>
-        <h2>Current Array State</h2>
-        {renderCurrentArray()}
-        <div className="iteration-buttons">
-          <button onClick={handlePreviousIteration} disabled={currentIndex === 0 || isSimulating}>Previous Iteration</button>
-          <button onClick={handleNextIteration} disabled={currentIndex >= states.length - 1 || isSimulating}>Next Iteration</button>
+      {endpoint !== 'merge-sort' && (
+        <div>
+          <h2>Current Array State</h2>
+          {renderCurrentArray()}
+          <div className="iteration-buttons">
+            <button onClick={handlePreviousIteration} disabled={currentIndex === 0 || isSimulating}>Previous Iteration</button>
+            <button onClick={handleNextIteration} disabled={currentIndex >= (endpoint === 'merge-sort' ? levels.length + merged.length - 1 : states.length - 1) || isSimulating}>Next Iteration</button>
+          </div>
         </div>
-      </div>
+      )}
       <div>
         <h2>Sorted Array</h2>
         <div className="array-container">
@@ -230,9 +206,20 @@ const SortPage = ({ endpoint, title }) => {
         {endpoint === 'heap-sort' ? (
           <HeapChart array={states[currentIndex] || initialArray} />
         ) : endpoint === 'quick-sort' || endpoint === 'merge-sort' ? (
-          renderSubarrays(states[currentIndex] || {})
+          <>
+            {levels.map((levelData, index) => (
+              <div key={index} className="level-container">
+                {renderSubarrays(levelData)}
+              </div>
+            )).slice(0, currentIndex + 1)}
+            {currentIndex >= levels.length && merged.reverse().map((levelData, index) => (
+              <div key={index} className="level-container">
+                {renderSubarrays(levelData)}
+              </div>
+            )).slice(0, currentIndex - levels.length + 1)}
+          </>
         ) : (
-          <BarChart array={states[currentIndex] || initialArray} />
+          <BarChart array={states[currentIndex] || initialArray} algorithm={endpoint} />
         )}
         <div className="simulation-buttons">
           <button onClick={handleRunSimulation} disabled={isSimulating}>Run Simulation</button>

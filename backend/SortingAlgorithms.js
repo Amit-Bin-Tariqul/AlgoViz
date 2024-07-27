@@ -33,8 +33,6 @@ function bubbleSort(array) {
   };
 }
 
-
-
 function insertionSort(array) {
   let iterations = [];
   let states = [];
@@ -70,8 +68,6 @@ function insertionSort(array) {
     cons: ["Inefficient for large data sets", "Not suitable for large datasets"]
   };
 }
-
-
 
 function selectionSort(array) {
   let iterations = [];
@@ -112,22 +108,36 @@ function selectionSort(array) {
   };
 }
 
-
-
 function mergeSort(array) {
   let iterations = [];
   let states = [];
+  let levels = [];
+  let merged = [];
   let startTime = performance.now();
   let swaps = 0;
 
-  function mergeSortHelper(array) {
-    if (array.length <= 1) return array;
+  function mergeSortHelper(arr, depth) {
+    if (arr.length <= 1) return arr;
 
-    const mid = Math.floor(array.length / 2);
-    const left = mergeSortHelper(array.slice(0, mid));
-    const right = mergeSortHelper(array.slice(mid));
+    const mid = Math.floor(arr.length / 2);
+    const left = mergeSortHelper(arr.slice(0, mid), depth + 1);
+    const right = mergeSortHelper(arr.slice(mid), depth + 1);
 
-    return merge(left, right);
+    const mergedArr = merge(left, right);
+
+    if (!levels[depth]) {
+      levels[depth] = { level: depth, arrays: [] };
+    }
+    levels[depth].arrays.push([...arr]);
+
+    if (depth > 0) {
+      if (!merged[depth - 1]) {
+        merged[depth - 1] = { level: depth - 1, arrays: [] };
+      }
+      merged[depth - 1].arrays.push([...mergedArr]);
+    }
+
+    return mergedArr;
   }
 
   function merge(left, right) {
@@ -144,7 +154,6 @@ function mergeSort(array) {
         rightIndex++;
         swaps++;
       }
-      states.push({ left, right, result: [...result, ...left.slice(leftIndex), ...right.slice(rightIndex)] });
     }
 
     result = result.concat(left.slice(leftIndex), right.slice(rightIndex));
@@ -152,11 +161,14 @@ function mergeSort(array) {
     return result;
   }
 
-  mergeSortHelper(array);
+  mergeSortHelper(array, 0);
   let endTime = performance.now();
+
   return {
     iterations,
     states,
+    levels,
+    merged,
     swaps,
     timeTaken: endTime - startTime,
     timeComplexity: "O(n log n)",
@@ -165,31 +177,29 @@ function mergeSort(array) {
   };
 }
 
-
-
 function quickSort(array) {
   let iterations = [];
   let states = [];
   let swaps = 0;
   let startTime = performance.now();
 
-  function quickSortHelper(array) {
-    if (array.length <= 1) return array;
+  function quickSortHelper(arr) {
+    if (arr.length <= 1) return arr;
 
-    const pivot = array[array.length - 1];
+    const pivot = arr[arr.length - 1];
     const left = [];
     const right = [];
 
-    for (let i = 0; i < array.length - 1; i++) {
-      if (array[i] < pivot) {
-        left.push(array[i]);
+    for (let i = 0; i < arr.length - 1; i++) {
+      if (arr[i] < pivot) {
+        left.push(arr[i]);
       } else {
-        right.push(array[i]);
+        right.push(arr[i]);
         swaps++;
       }
     }
 
-    states.push({ left, pivot, right }); // Store the subarrays and the pivot after partition
+    states.push({ left, pivot, right });
     const sortedLeft = quickSortHelper(left);
     const sortedRight = quickSortHelper(right);
     const result = [...sortedLeft, pivot, ...sortedRight];
@@ -212,8 +222,6 @@ function quickSort(array) {
     cons: ["Unstable sort", "Worst case time complexity is O(n^2)"]
   };
 }
-
-
 
 function heapSort(array) {
   let iterations = [];

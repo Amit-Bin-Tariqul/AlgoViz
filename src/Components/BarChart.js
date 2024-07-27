@@ -5,14 +5,18 @@ import ChartDataLabels from 'chartjs-plugin-datalabels';
 
 ChartJS.register(CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend, ChartDataLabels);
 
-const BarChart = ({ array }) => {
+const BarChart = ({ array, algorithm }) => {
+  const backgroundColor = algorithm === 'merge-sort'
+    ? 'rgba(255, 215, 0, 0.6)'
+    : array.map(() => `rgba(${Math.floor(Math.random() * 256)}, ${Math.floor(Math.random() * 256)}, ${Math.floor(Math.random() * 256)}, 0.6)`);
+
   const data = {
     labels: array.map(() => ''), // Hide the index by using empty strings
     datasets: [
       {
         label: 'Array Values',
         data: array,
-        backgroundColor: array.map(() => `rgba(${Math.floor(Math.random() * 256)}, ${Math.floor(Math.random() * 256)}, ${Math.floor(Math.random() * 256)}, 0.6)`),
+        backgroundColor: backgroundColor,
         borderColor: array.map(() => 'rgba(0, 0, 0, 1)'),
         borderWidth: 1,
       },

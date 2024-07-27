@@ -4,6 +4,7 @@
   padding: 20px;
   color: #fff; /* Ensure text color is visible */
   min-height: 100vh; /* Ensure it fills the viewport height */
+  background-color: #1e1e1e; /* Dark background color */
 }
 
 h1, h2 {
@@ -127,4 +128,38 @@ h1, h2 {
   min-width: 30px;
   text-align: center;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+}
+
+.subarray-level {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.subarrays {
+  display: flex;
+  justify-content: center;
+}
+
+.level-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.subarray {
+  margin: 10px;
+}
+
+.tree-line {
+  display: flex;
+  justify-content: center;
+  margin: 5px 0;
+}
+
+.tree-line-item {
+  width: 2px;
+  height: 20px;
+  background-color: #00FF00; /* Green color */
+  margin: 0 10px;
 }

@@ -13,7 +13,6 @@ function App() {
   return (
     <Router>
       <div className="app-container">
-        <div className="background-image"></div>
         <header className="text-center">
           <Navbar />
           <h1 className="algoviz-title">ALGOVIZ</h1>

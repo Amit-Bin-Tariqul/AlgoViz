@@ -21,7 +21,7 @@ let iterations = {
 function generateRandomArray() {
   const randomArray = [];
   const availableNumbers = new Set();
-  while (availableNumbers.size < 10) {
+  while (availableNumbers.size < 8) {
     availableNumbers.add(Math.floor(Math.random() * 50) + 1);
   }
   return Array.from(availableNumbers);
@@ -41,7 +41,7 @@ generateIterations();
 app.post('/api/:algorithm', (req, res) => {
   const algorithm = req.params.algorithm;
   if (iterations[algorithm]) {
-    res.json({ initialArray, ...iterations[algorithm], iterations: iterations[algorithm].iterations || [], states: iterations[algorithm].states || [] });
+    res.json({ initialArray, ...iterations[algorithm], iterations: iterations[algorithm].iterations || [], states: iterations[algorithm].states || [], levels: iterations[algorithm].levels || [] });
   } else {
     res.status(400).json({ error: 'Invalid algorithm' });
   }
