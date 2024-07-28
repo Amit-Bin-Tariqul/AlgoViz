@@ -180,48 +180,55 @@ function mergeSort(array) {
 function quickSort(array) {
   let iterations = [];
   let states = [];
-  let swaps = 0;
+  let pivots = [];
+  let swapPairs = [];
   let startTime = performance.now();
 
-  function quickSortHelper(arr) {
-    if (arr.length <= 1) return arr;
+  function quickSortHelper(arr, low, high) {
+    if (low < high) {
+      let pi = partition(arr, low, high);
 
-    const pivot = arr[arr.length - 1];
-    const left = [];
-    const right = [];
-
-    for (let i = 0; i < arr.length - 1; i++) {
-      if (arr[i] < pivot) {
-        left.push(arr[i]);
-      } else {
-        right.push(arr[i]);
-        swaps++;
-      }
+      quickSortHelper(arr, low, pi - 1);
+      quickSortHelper(arr, pi + 1, high);
     }
-
-    states.push({ left, pivot, right });
-    const sortedLeft = quickSortHelper(left);
-    const sortedRight = quickSortHelper(right);
-    const result = [...sortedLeft, pivot, ...sortedRight];
-    states.push({ array: result });
-
-    return result;
   }
 
-  let sortedArray = quickSortHelper([...array]);
+  function partition(arr, low, high) {
+    let pivot = arr[high];
+    let i = low - 1;
+    pivots.push(high);
+
+    for (let j = low; j < high; j++) {
+      if (arr[j] < pivot) {
+        i++;
+        [arr[i], arr[j]] = [arr[j], arr[i]];
+        swapPairs.push([i, j]);
+        states.push([...arr]);
+      }
+    }
+    [arr[i + 1], arr[high]] = [arr[high], arr[i + 1]];
+    swapPairs.push([i + 1, high]);
+    states.push([...arr]);
+    return i + 1;
+  }
+
+  let arr = [...array];
+  quickSortHelper(arr, 0, arr.length - 1);
   let endTime = performance.now();
 
-  iterations.push([...sortedArray]); // Store the final sorted array
+  iterations.push([...arr]); // Store the final sorted array
   return {
     iterations,
     states,
-    swaps,
+    pivots,
+    swapPairs,
     timeTaken: endTime - startTime,
     timeComplexity: "O(n log n)",
     pros: ["Efficient for large datasets", "In-place sorting"],
     cons: ["Unstable sort", "Worst case time complexity is O(n^2)"]
   };
 }
+
 
 function heapSort(array) {
   let iterations = [];

@@ -5,13 +5,10 @@ import ChartDataLabels from 'chartjs-plugin-datalabels';
 
 ChartJS.register(CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend, ChartDataLabels);
 
-const BarChart = ({ array, algorithm }) => {
-  const backgroundColor = algorithm === 'merge-sort'
-    ? 'rgba(255, 215, 0, 0.6)'
-    : array.map(() => `rgba(${Math.floor(Math.random() * 256)}, ${Math.floor(Math.random() * 256)}, ${Math.floor(Math.random() * 256)}, 0.6)`);
-
+const BarChart = ({ array, algorithm, pivot, swaps, getColorForValue }) => {
+  const backgroundColor = array.map(getColorForValue);
   const data = {
-    labels: array.map(() => ''), // Hide the index by using empty strings
+    labels: array.map((_, index) => pivot === index ? 'pvt' : ''), // Show 'pvt' for the pivot
     datasets: [
       {
         label: 'Array Values',
@@ -45,7 +42,7 @@ const BarChart = ({ array, algorithm }) => {
           weight: 'bold',
           size: 16,
         },
-        formatter: (value) => value, // Display the value
+        formatter: (value, context) => context.chart.data.labels[context.dataIndex] === 'pvt' ? 'pvt' : value, // Show 'pvt' for pivot
       },
     },
   };

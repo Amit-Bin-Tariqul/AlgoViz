@@ -10,7 +10,7 @@ app.use(cors());
 
 let initialArray = generateRandomArray();
 let iterations = {
-  "bubble-sort": {},
+  'bubble-sort': {},
   'insertion-sort': {},
   'selection-sort': {},
   'merge-sort': {},
@@ -41,7 +41,7 @@ generateIterations();
 app.post('/api/:algorithm', (req, res) => {
   const algorithm = req.params.algorithm;
   if (iterations[algorithm]) {
-    res.json({ initialArray, ...iterations[algorithm], iterations: iterations[algorithm].iterations || [], states: iterations[algorithm].states || [], levels: iterations[algorithm].levels || [] });
+    res.json({ initialArray, ...iterations[algorithm], iterations: iterations[algorithm].iterations || [], states: iterations[algorithm].states || [], levels: iterations[algorithm].levels || [], pivots: iterations[algorithm].pivots || [], swapPairs: iterations[algorithm].swapPairs || [] });
   } else {
     res.status(400).json({ error: 'Invalid algorithm' });
   }

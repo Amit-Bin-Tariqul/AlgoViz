@@ -11,6 +11,8 @@ const SortPage = ({ endpoint, title }) => {
   const [levels, setLevels] = useState([]);
   const [merged, setMerged] = useState([]);
   const [sortedArray, setSortedArray] = useState([]);
+  const [pivots, setPivots] = useState([]); // Added pivots state
+  const [swapPairs, setSwapPairs] = useState([]); // Added swapPairs state
   const [currentIndex, setCurrentIndex] = useState(0);
   const [stats, setStats] = useState({
     swaps: 0,
@@ -24,16 +26,20 @@ const SortPage = ({ endpoint, title }) => {
   const [isPaused, setIsPaused] = useState(false);
   const intervalRef = useRef(null);
 
+  const uniqueColors = useRef({}); // Use useRef to store colors
+
   useEffect(() => {
     axios.post(`http://localhost:3000/api/${endpoint}`)
       .then(response => {
-        const { initialArray, iterations, states, levels, merged, sortedArray, swaps, timeTaken, timeComplexity, pros, cons } = response.data;
+        const { initialArray, iterations, states, levels, merged, sortedArray, pivots, swapPairs, swaps, timeTaken, timeComplexity, pros, cons } = response.data;
         setInitialArray(initialArray || []);
         setIterations(iterations || []);
         setStates(states || []);
         setLevels(levels || []);
         setMerged(merged || []);
         setSortedArray(sortedArray || []);
+        setPivots(pivots || []); // Set pivots from response
+        setSwapPairs(swapPairs || []); // Set swapPairs from response
         setCurrentIndex(0);
         setStats({
           swaps: swaps || 0,
@@ -97,6 +103,13 @@ const SortPage = ({ endpoint, title }) => {
     }
   }, [isPaused]);
 
+  const getColorForValue = (value) => {
+    if (!uniqueColors.current[value]) {
+      uniqueColors.current[value] = `rgba(${Math.floor(Math.random() * 256)}, ${Math.floor(Math.random() * 256)}, ${Math.floor(Math.random() * 256)}, 0.6)`;
+    }
+    return uniqueColors.current[value];
+  };
+
   const renderSubarrays = (levelData) => {
     return (
       <div className="subarrays">
@@ -135,7 +148,7 @@ const SortPage = ({ endpoint, title }) => {
             </div>
           );
         } else {
-          return merged.map((levelData, index) => (
+          return merged.reverse().map((levelData, index) => (
             <div key={index} className="level-container">
               {renderSubarrays(levelData)}
             </div>
@@ -205,7 +218,15 @@ const SortPage = ({ endpoint, title }) => {
         <h2>Simulation</h2>
         {endpoint === 'heap-sort' ? (
           <HeapChart array={states[currentIndex] || initialArray} />
-        ) : endpoint === 'quick-sort' || endpoint === 'merge-sort' ? (
+        ) : endpoint === 'quick-sort' ? (
+          <BarChart 
+            array={states[currentIndex] || initialArray} 
+            algorithm={endpoint}
+            pivot={pivots[currentIndex]}
+            swaps={swapPairs[currentIndex]}
+            getColorForValue={getColorForValue}
+          />
+        ) : endpoint === 'merge-sort' ? (
           <>
             {levels.map((levelData, index) => (
               <div key={index} className="level-container">
@@ -219,7 +240,11 @@ const SortPage = ({ endpoint, title }) => {
             )).slice(0, currentIndex - levels.length + 1)}
           </>
         ) : (
-          <BarChart array={states[currentIndex] || initialArray} algorithm={endpoint} />
+          <BarChart 
+            array={states[currentIndex] || initialArray} 
+            algorithm={endpoint}
+            getColorForValue={getColorForValue}
+          />
         )}
         <div className="simulation-buttons">
           <button onClick={handleRunSimulation} disabled={isSimulating}>Run Simulation</button>
