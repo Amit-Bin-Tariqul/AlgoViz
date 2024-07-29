@@ -11,6 +11,9 @@ function Navbar() {
       <Link to="/merge-sort" className="nav-link">Merge Sort</Link>
       <Link to="/quick-sort" className="nav-link">Quick Sort</Link>
       <Link to="/heap-sort" className="nav-link">Heap Sort</Link>
+      <Link to="/bfs" className="nav-link">BFS</Link>
+      <Link to="/dfs" className="nav-link">DFS</Link>
+      <Link to="/dijkstra" className="nav-link">Dijkstra</Link>
     </nav>
   );
 }

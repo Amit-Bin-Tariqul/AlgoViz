@@ -7,6 +7,8 @@ import SelectionSort from './Pages/SelectionSort';
 import MergeSort from './Pages/MergeSort';
 import QuickSort from './Pages/QuickSort';
 import HeapSort from './Pages/HeapSort';
+import PathFindingPage from './Components/PathFindingPage';
+import DijkstraPage from './Components/DijkstraPage';
 import './App.css';
 
 function App() {
@@ -25,6 +27,9 @@ function App() {
           <Route path="/merge-sort" element={<MergeSort />} />
           <Route path="/quick-sort" element={<QuickSort />} />
           <Route path="/heap-sort" element={<HeapSort />} />
+          <Route path="/bfs" element={<PathFindingPage algorithm="bfs" />} />
+          <Route path="/dfs" element={<PathFindingPage algorithm="dfs" />} />
+          <Route path="/dijkstra" element={<DijkstraPage />} />
         </Routes>
       </div>
     </Router>

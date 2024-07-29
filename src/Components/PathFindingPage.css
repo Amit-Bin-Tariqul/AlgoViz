@@ -1,0 +1,79 @@
+.pathfinding-page {
+  text-align: center;
+  padding: 20px;
+}
+
+.controls {
+  margin-bottom: 20px;
+}
+
+.controls button {
+  margin: 0 10px;
+  padding: 10px 20px;
+  font-size: 16px;
+  background-color: #007BFF;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.controls button:hover {
+  background-color: #0056b3;
+}
+
+.grid {
+  display: inline-block;
+  margin-bottom: 20px;
+  overflow: auto; /* Enable scrolling if grid becomes too large */
+}
+
+.row {
+  display: flex;
+}
+
+.cell {
+  width: 40px;
+  height: 40px;
+  border: 1px solid #ccc;
+  box-sizing: border-box;
+  position: relative;
+  background-color: white; /* Default cell color */
+  cursor: pointer;
+}
+
+.wall {
+  background-color: black;
+}
+
+.source {
+  background-color: blue;
+}
+
+.destination {
+  background-color: red;
+}
+
+.visited {
+  background-color: yellow;
+}
+
+.path {
+  background-color: green;
+}
+
+.find-path-button {
+  padding: 10px 20px;
+  font-size: 16px;
+  background-color: #28a745;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.find-path-button:hover {
+  background-color: #218838;
+}

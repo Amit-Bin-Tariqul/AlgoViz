@@ -1,0 +1,87 @@
+.dijkstra-page {
+  text-align: center;
+  padding: 20px;
+}
+
+.controls {
+  margin-bottom: 20px;
+}
+
+.controls input {
+  margin-right: 10px;
+  padding: 5px;
+}
+
+.controls button {
+  margin: 0 10px;
+  padding: 10px 20px;
+  font-size: 16px;
+  background-color: #007BFF;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.controls button:hover {
+  background-color: #0056b3;
+}
+
+.graph {
+  position: relative;
+  width: 800px;
+  height: 600px;
+  border: 1px solid #ccc;
+  margin: 0 auto;
+  background-color: #f9f9f9; /* Whitish background */
+}
+
+.node {
+  position: absolute;
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  background-color: #007BFF;
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.node.selected {
+  background-color: #ff5722;
+}
+
+.node:hover {
+  background-color: #0056b3;
+}
+
+.edge {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+}
+
+.weights-table {
+  margin-top: 20px;
+}
+
+.weights-table table {
+  margin: 0 auto;
+  border-collapse: collapse;
+}
+
+.weights-table td {
+  padding: 10px;
+  border: 1px solid #ccc;
+}
+
+.weights-table input {
+  width: 60px;
+  padding: 5px;
+}

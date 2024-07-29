@@ -1,6 +1,7 @@
 const express = require('express');
 const cors = require('cors');
 const { bubbleSort, insertionSort, selectionSort, mergeSort, quickSort, heapSort } = require('./SortingAlgorithms');
+const { bfs, dfs, dijkstra } = require('./ShortestPathFindingAlgorithms');
 
 const app = express();
 const PORT = 3000;
@@ -45,6 +46,22 @@ app.post('/api/:algorithm', (req, res) => {
   } else {
     res.status(400).json({ error: 'Invalid algorithm' });
   }
+});
+
+app.post('/api/shortest-path/:algorithm', (req, res) => {
+  const { grid, source, destination } = req.body;
+  const algorithm = req.params.algorithm;
+
+  let result;
+  if (algorithm === 'bfs') {
+    result = bfs(grid, source, destination);
+  } else if (algorithm === 'dfs') {
+    result = dfs(grid, source, destination);
+  } else {
+    return res.status(400).json({ error: 'Invalid algorithm' });
+  }
+
+  res.json(result);
 });
 
 app.listen(PORT, () => {
