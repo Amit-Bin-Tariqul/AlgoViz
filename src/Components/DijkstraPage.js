@@ -7,7 +7,7 @@ const DijkstraPage = () => {
   const [edges, setEdges] = useState([]);
   const [mode, setMode] = useState('');
   const [weights, setWeights] = useState({});
-  const [numNodes, setNumNodes] = useState(0);
+  const [numNodes, setNumNodes] = useState('');
   const [selectedNode, setSelectedNode] = useState(null);
   const [pathsSet, setPathsSet] = useState(false);
 
@@ -57,7 +57,15 @@ const DijkstraPage = () => {
         setSelectedNode(nodeId);
       } else {
         if (selectedNode !== nodeId) {
-          setEdges([...edges, [selectedNode, nodeId]]);
+          setEdges((prevEdges) => {
+            const newEdges = [...prevEdges];
+            const pair1 = `${selectedNode}-${nodeId}`;
+            const pair2 = `${nodeId}-${selectedNode}`;
+            if (!newEdges.some(([n1, n2]) => (n1 === selectedNode && n2 === nodeId) || (n1 === nodeId && n2 === selectedNode))) {
+              newEdges.push([selectedNode, nodeId]);
+            }
+            return newEdges;
+          });
           setSelectedNode(null);
         } else {
           setSelectedNode(null);
@@ -91,10 +99,10 @@ const DijkstraPage = () => {
     <div className="dijkstra-page">
       <div className="controls">
         <input
-          type="number"
+          type="text"
           placeholder="Number of Nodes"
           value={numNodes}
-          onChange={(e) => setNumNodes(parseInt(e.target.value, 10))}
+          onChange={(e) => setNumNodes(e.target.value.replace(/[^0-9]/g, ''))}
         />
         <button onClick={generateNodes}>Generate Nodes</button>
         <button onClick={() => setMode('edge')} disabled={pathsSet}>Set Paths</button>

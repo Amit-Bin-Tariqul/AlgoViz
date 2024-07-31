@@ -49,7 +49,7 @@ app.post('/api/:algorithm', (req, res) => {
 });
 
 app.post('/api/shortest-path/:algorithm', (req, res) => {
-  const { grid, source, destination } = req.body;
+  const { grid, source, destination, nodes, edges, weights } = req.body;
   const algorithm = req.params.algorithm;
 
   let result;
@@ -57,6 +57,8 @@ app.post('/api/shortest-path/:algorithm', (req, res) => {
     result = bfs(grid, source, destination);
   } else if (algorithm === 'dfs') {
     result = dfs(grid, source, destination);
+  } else if (algorithm === 'dijkstra') {
+    result = dijkstra(nodes, edges, weights, source, destination);
   } else {
     return res.status(400).json({ error: 'Invalid algorithm' });
   }
