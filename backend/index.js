@@ -66,6 +66,11 @@ app.post('/api/shortest-path/:algorithm', (req, res) => {
   res.json(result);
 });
 
+app.get("/", (req, res) => {
+  res.send(`Server is Running on: ${PORT}`);
+});
+
+
 app.listen(PORT, () => {
   console.log(`Server is running on http://localhost:${PORT}`);
 });

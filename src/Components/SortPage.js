@@ -29,7 +29,7 @@ const SortPage = ({ endpoint, title }) => {
   const uniqueColors = useRef({}); // Use useRef to store colors
 
   useEffect(() => {
-    axios.post(`http://localhost:3000/api/${endpoint}`)
+    axios.post(`https://algoviz-backend.onrender.com/api/${endpoint}`)
       .then(response => {
         const { initialArray, iterations, states, levels, merged, sortedArray, pivots, swapPairs, swaps, timeTaken, timeComplexity, pros, cons } = response.data;
         setInitialArray(initialArray || []);

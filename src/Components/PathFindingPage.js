@@ -50,7 +50,7 @@ const PathFindingPage = ({ algorithm }) => {
       return;
     }
 
-    axios.post(`http://localhost:3000/api/shortest-path/${algorithm}`, {
+    axios.post(`https://algoviz-backend.onrender.com/api/shortest-path/${algorithm}`, {
       grid,
       source,
       destination
