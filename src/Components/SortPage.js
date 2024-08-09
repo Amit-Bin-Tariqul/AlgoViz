@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useRef } from 'react';
+import React, { useEffect, useState, useRef, useCallback } from 'react';
 import axios from 'axios';
 import './SortPage.css';
 import BarChart from './BarChart';
@@ -67,7 +67,7 @@ const SortPage = ({ endpoint, title }) => {
     }
   };
 
-  const handleRunSimulation = () => {
+  const handleRunSimulation = useCallback(() => {
     setIsSimulating(true);
     setIsPaused(false);
     setCurrentIndex(0);
@@ -89,7 +89,7 @@ const SortPage = ({ endpoint, title }) => {
         }
       });
     }, 500);
-  };
+  }, [isPaused, endpoint, levels.length, merged.length, states.length]);
 
   const handlePauseResume = () => {
     setIsPaused(!isPaused);
@@ -101,7 +101,7 @@ const SortPage = ({ endpoint, title }) => {
     } else if (!isPaused && isSimulating) {
       handleRunSimulation();
     }
-  }, [isPaused]);
+  }, [isPaused, handleRunSimulation, isSimulating]);
 
   const getColorForValue = (value) => {
     if (!uniqueColors.current[value]) {

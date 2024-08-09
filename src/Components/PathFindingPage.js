@@ -1,30 +1,31 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback, useRef } from 'react';
 import axios from 'axios';
 import './PathFindingPage.css';
+
+const createGrid = (rows, cols) => {
+  return Array.from({ length: rows }, () => Array(cols).fill(''));
+};
 
 const PathFindingPage = ({ algorithm }) => {
   const [grid, setGrid] = useState(createGrid(10, 10));
   const [source, setSource] = useState(null);
   const [destination, setDestination] = useState(null);
-  const [mode, setMode] = useState(''); // 'source', 'destination', 'wall'
   const [path, setPath] = useState([]);
   const [visitedCells, setVisitedCells] = useState([]);
+  const [mode, setMode] = useState('');
+  const intervalRef = useRef(null);
 
-  useEffect(() => {
-    resetGrid();
-  }, [algorithm]);
-
-  function resetGrid() {
+  const resetGrid = useCallback(() => {
     setGrid(createGrid(10, 10));
     setSource(null);
     setDestination(null);
     setPath([]);
     setVisitedCells([]);
-  }
+  }, []);
 
-  function createGrid(rows, cols) {
-    return Array.from({ length: rows }, () => Array(cols).fill(''));
-  }
+  useEffect(() => {
+    resetGrid();
+  }, [algorithm, resetGrid]); // Include resetGrid in dependencies
 
   const handleCellClick = (row, col) => {
     if (mode === 'source') {
@@ -51,7 +52,7 @@ const PathFindingPage = ({ algorithm }) => {
       source,
       destination
     }).then(response => {
-      const { path, visitedCells } = response.data;
+      const { path = [], visitedCells = [] } = response.data;
       animateVisitedCells(visitedCells, path);
     }).catch(error => {
       console.error('Error finding path:', error);
@@ -71,6 +72,14 @@ const PathFindingPage = ({ algorithm }) => {
       }, index * 50); // Reduce this to 50ms from 500ms for 10x speed
     });
   };
+
+  useEffect(() => {
+    return () => {
+      if (intervalRef.current) {
+        clearInterval(intervalRef.current);
+      }
+    };
+  }, []);
 
   return (
     <div className="pathfinding-page">

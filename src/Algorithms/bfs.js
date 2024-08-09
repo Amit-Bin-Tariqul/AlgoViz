@@ -35,7 +35,7 @@ const bfs = (grid, start, end) => {
       }
     }
   }
-  return { path: null, visitedCells };
+  return { path: [], visitedCells }; // Return empty path if not found
 };
 
 export default bfs;

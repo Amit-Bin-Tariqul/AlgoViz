@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import './DijkstraPage.css';
 
 const DijkstraPage = () => {
@@ -14,9 +14,9 @@ const DijkstraPage = () => {
     if (numNodes > 0) {
       generateNodes();
     }
-  }, [numNodes]);
+  }, [numNodes]); 
 
-  const generateNodes = () => {
+  const generateNodes = useCallback(() => {
     const generatedNodes = [];
     for (let i = 0; i < numNodes; i++) {
       generatedNodes.push({ id: i, x: 0, y: 0 });
@@ -26,7 +26,7 @@ const DijkstraPage = () => {
     setEdges([]);
     setWeights({});
     setPathsSet(false);
-  };
+  }, [numNodes]);
 
   const arrangeNodes = (nodes) => {
     const numNodes = nodes.length;
@@ -58,8 +58,6 @@ const DijkstraPage = () => {
         if (selectedNode !== nodeId) {
           setEdges((prevEdges) => {
             const newEdges = [...prevEdges];
-            const pair1 = `${selectedNode}-${nodeId}`;
-            const pair2 = `${nodeId}-${selectedNode}`;
             if (!newEdges.some(([n1, n2]) => (n1 === selectedNode && n2 === nodeId) || (n1 === nodeId && n2 === selectedNode))) {
               newEdges.push([selectedNode, nodeId]);
             }
