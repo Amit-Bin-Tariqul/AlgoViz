@@ -10,12 +10,6 @@ const DijkstraPage = () => {
   const [selectedNode, setSelectedNode] = useState(null);
   const [pathsSet, setPathsSet] = useState(false);
 
-  useEffect(() => {
-    if (numNodes > 0) {
-      generateNodes();
-    }
-  }, [numNodes]); 
-
   const generateNodes = useCallback(() => {
     const generatedNodes = [];
     for (let i = 0; i < numNodes; i++) {
@@ -27,6 +21,12 @@ const DijkstraPage = () => {
     setWeights({});
     setPathsSet(false);
   }, [numNodes]);
+
+  useEffect(() => {
+    if (numNodes > 0) {
+      generateNodes();
+    }
+  }, [numNodes, generateNodes]); // Include generateNodes as a dependency
 
   const arrangeNodes = (nodes) => {
     const numNodes = nodes.length;

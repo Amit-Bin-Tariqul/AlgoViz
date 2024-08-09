@@ -1,18 +1,14 @@
-import React, { useState, useEffect, useCallback, useRef } from 'react';
+import React, { useState, useEffect, useRef, useCallback } from 'react';
 import axios from 'axios';
 import './PathFindingPage.css';
-
-const createGrid = (rows, cols) => {
-  return Array.from({ length: rows }, () => Array(cols).fill(''));
-};
 
 const PathFindingPage = ({ algorithm }) => {
   const [grid, setGrid] = useState(createGrid(10, 10));
   const [source, setSource] = useState(null);
   const [destination, setDestination] = useState(null);
+  const [mode, setMode] = useState(''); // 'source', 'destination', 'wall'
   const [path, setPath] = useState([]);
   const [visitedCells, setVisitedCells] = useState([]);
-  const [mode, setMode] = useState('');
   const intervalRef = useRef(null);
 
   const resetGrid = useCallback(() => {
@@ -21,11 +17,18 @@ const PathFindingPage = ({ algorithm }) => {
     setDestination(null);
     setPath([]);
     setVisitedCells([]);
-  }, []);
+    if (intervalRef.current) {
+      clearInterval(intervalRef.current);
+    }
+  }, []); // No dependencies needed for resetGrid
 
   useEffect(() => {
     resetGrid();
-  }, [algorithm, resetGrid]); // Include resetGrid in dependencies
+  }, [algorithm, resetGrid]); // Include resetGrid as a dependency
+
+  function createGrid(rows, cols) {
+    return Array.from({ length: rows }, () => Array(cols).fill(''));
+  }
 
   const handleCellClick = (row, col) => {
     if (mode === 'source') {
@@ -52,7 +55,7 @@ const PathFindingPage = ({ algorithm }) => {
       source,
       destination
     }).then(response => {
-      const { path = [], visitedCells = [] } = response.data;
+      const { path, visitedCells } = response.data;
       animateVisitedCells(visitedCells, path);
     }).catch(error => {
       console.error('Error finding path:', error);
@@ -74,12 +77,13 @@ const PathFindingPage = ({ algorithm }) => {
   };
 
   useEffect(() => {
+    const currentInterval = intervalRef.current; // Capture the current ref value
     return () => {
-      if (intervalRef.current) {
-        clearInterval(intervalRef.current);
+      if (currentInterval) {
+        clearInterval(currentInterval);
       }
     };
-  }, []);
+  }, []); // No dependencies needed here
 
   return (
     <div className="pathfinding-page">
